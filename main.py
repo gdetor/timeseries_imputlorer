@@ -1,25 +1,19 @@
-import numpy as np
 import pandas as pd
 import matplotlib.pylab as plt
 
 from imputlorer.imputer import TSImputer
+from imputlorer.load import generateSyntheticData
 
 
 if __name__ == '__main__':
-    X = np.random.random(100)
+    X = generateSyntheticData(size=100, missing_perc=0.2)
     X_copy = X.copy()
-    idx = []
-    for i in range(20):
-        index = np.random.randint(0, 100)
-        idx.append(index)
-        X[index] = np.nan
 
     imp = TSImputer(method="nocb")
     a, b = imp.getDataRange(X)
     print(f"Range [{a}, {b}]")
     print(f"Med-range = {imp.getDataMidRange(X)}")
     X_imp = imp.run(X)
-    exit()
 
     dfX = pd.DataFrame(X)
     nul_data = pd.isnull(dfX)

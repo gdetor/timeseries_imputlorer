@@ -29,6 +29,7 @@ class TSImputer:
                  metric="nan_euclidean",
                  ):
         self.missing_values = missing_values
+        self.method = method
         if method == "nocb":
             self.imputer = LastNextValueImputer(strategy=method,
                                                 missing_values=missing_values,
@@ -73,8 +74,11 @@ class TSImputer:
 
     def run(self, X):
         if len(X.shape) == 1:
-            X = X.reshape(1, -1)
-        return self.imputer.fit_transform(X)
+            X = X.reshape(-1, 1)
+        if self.method == "locf" or self.method == "nocb":
+            X = X.T
+        res = self.imputer.fit_transform(X)
+        return res
 
     def reset(self):
         pass
