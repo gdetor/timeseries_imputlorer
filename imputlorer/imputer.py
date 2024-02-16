@@ -45,8 +45,8 @@ class TSImputer:
                                          )
         elif method == "multi":
             estimator = BayesianRidge()
-            estimator = LinearRegression()
-            estimator = Ridge()
+            # estimator = LinearRegression()
+            # estimator = Ridge()
             self.imputer = IterativeImputer(missing_values=missing_values,
                                             initial_strategy=strategy,
                                             fill_value=fill_value,

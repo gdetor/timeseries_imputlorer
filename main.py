@@ -1,37 +1,46 @@
-import pandas as pd
+# import pandas as pd
 import matplotlib.pylab as plt
 
 from imputlorer.imputer import TSImputer
-from imputlorer.load import generateSyntheticData
+from imputlorer.generate_data import generateSyntheticData
 
 
 if __name__ == '__main__':
-    X = generateSyntheticData(size=100, missing_perc=0.2)
-    X_copy = X.copy()
+    # First step
+    # Load or generate the data
+    X, X0 = generateSyntheticData(size=100, missing_perc=0.2)
 
-    imp = TSImputer(method="nocb")
-    a, b = imp.getDataRange(X)
-    print(f"Range [{a}, {b}]")
-    print(f"Med-range = {imp.getDataMidRange(X)}")
-    X_imp = imp.run(X)
+    # Second step
+    # Run all the imputation methods and collect the data in a dictionary
+    standalone_method = ["nocb", "locf", "knn"]
+    method = ["simple", "multi"]
+    strategy = ["mean", "median", "constant"]
 
-    dfX = pd.DataFrame(X)
-    nul_data = pd.isnull(dfX)
-    dfX = dfX.assign(FillMean=dfX.fillna(dfX.mean()))
+    res = {}
+    for i, m in enumerate(method):
+        for j, s in enumerate(strategy):
+            imp = TSImputer(method=m, strategy=s)
+            X_imp = imp.run(X)
+            res[m+s] = X_imp
 
-    imp0 = TSImputer(method="simple", strategy="median")
-    X_imp0 = imp0.run(X.T.copy())
+    for i, m in enumerate(standalone_method):
+        imp = TSImputer(method=m)
+        X_imp = imp.run(X)
+        res[m] = X_imp
 
-    imp1 = TSImputer(method="multi", strategy="median")
-    X_imp1 = imp1.run(X.T.copy())
+    # dfX = pd.DataFrame(X)
+    # nul_data = pd.isnull(dfX)
+    # dfX = dfX.assign(FillMean=dfX.fillna(dfX.mean()))
 
-    imp2 = TSImputer(method="knn")
-    X_imp2 = imp2.run(X.T.copy())
+    fig = plt.figure(figsize=(13, 6))
+    ax = fig.add_subplot(111)
+    ax.plot(X0, '-', c='k', label='original')
+    ax.plot(X, label="damaged", c='r')
+    for key, item in res.items():
+        ax.plot(item, label=key)
+    ax.legend()
 
-    plt.plot(X_copy, '-', label='original')
-    plt.plot(X_imp0, 'x--', label='simple', ms=10)
-    plt.plot(X_imp1, 'o--', label='multi')
-    plt.plot(X_imp2, 'p--', label='knn')
-    plt.plot(X, label="damaged")
-    plt.legend()
+    # Third step
+    # Optimize and train the neural networks on the imputed and original data
+    # Collect all the errors for comparing
     plt.show()

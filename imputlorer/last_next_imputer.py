@@ -33,4 +33,4 @@ class LastNextValueImputer:
 
         if self.strategy == "nocb":
             x = np.flip(x)
-        return x
+        return x.T

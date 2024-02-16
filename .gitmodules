@@ -1,0 +1,3 @@
+[submodule "imputlorer/pytorch_timeseries_loader"]
+	path = imputlorer/pytorch_timeseries_loader
+	url = https://github.com/gdetor/pytorch_timeseries_loader.git
