@@ -33,4 +33,13 @@ class LastNextValueImputer:
 
         if self.strategy == "nocb":
             x = np.flip(x)
-        return x.T
+        x = x.T
+        if self.strategy == "nocb" and x[0] == np.nan:
+            x[0] = x[1]
+        if self.strategy == "nocb" and x[-1] == np.nan:
+            x[-1] = x[0]
+        if self.strategy == "locf" and x[-1] == np.nan:
+            x[-1] = x[-2]
+        if self.strategy == "locf" and x[0] == np.nan:
+            x[0] = x[-1]
+        return x
