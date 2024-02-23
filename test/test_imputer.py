@@ -6,7 +6,8 @@ import numpy as np
 
 root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(root_dir)
-sys.pycache_prefix = os.path.join(root_dir, 'dist', 'pycache', 'test')
+# sys.pycache_prefix = os.path.join(root_dir, 'dist', 'pycache', 'test')
+sys.pycache_prefix = os.path.join(root_dir, '__pycache__', 'test')
 lore = __import__('imputlorer')
 
 
@@ -17,8 +18,8 @@ X_mean = np.array([1, 2, 3, mu, 5, 6, 7, mu]).reshape(-1, 1)
 median = np.median(X_)
 X_median = np.array([1, 2, 3, median, 5, 6, 7, median]).reshape(-1, 1)
 X_const = np.array([1, 2, 3, 3, 5, 6, 7, 3]).reshape(-1, 1)
-X_locf = np.array([1, 2, 3, 3, 5, 6, 7, 7]).reshape(1, -1)
-X_nocb = np.array([1, 2, 3, 5, 5, 6, 7, np.nan]).reshape(1, -1)
+X_locf = np.array([1, 2, 3, 3, 5, 6, 7, 7]).reshape(-1, 1)
+X_nocb = np.array([1, 2, 3, 5, 5, 6, 7, 7]).reshape(-1, 1)
 
 
 class TestClassSimpleMethod:
@@ -71,11 +72,15 @@ class TestClassNOCB:
     def test_nocb(self):
         imp = lore.imputer.TSImputer(method="nocb")
         Y = imp.run(X)
+        print(X)
+        print(Y)
         assert np.array_equal(Y[:-1], X_nocb[:-1])
 
 
 class TestClassLOCF:
     def test_locf(self):
         imp = lore.imputer.TSImputer(method="locf")
+        print(X)
         Y = imp.run(X)
+        print(Y)
         assert np.array_equal(Y, X_locf)

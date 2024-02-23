@@ -4,7 +4,6 @@ import matplotlib.pylab as plt
 import xgboost as xgb
 
 from sklearn.metrics import mean_squared_error as MSE
-from sklearn.preprocessing import MinMaxScaler
 
 from ray import tune
 from ray.air import session
