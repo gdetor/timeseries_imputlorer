@@ -1,3 +1,19 @@
+# Main example of how to use Imputelorer for univariate time series data
+# imputation. Copyright (C) 2024 Georgios Is. Detorakis
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 # import numpy as np
 import matplotlib.pylab as plt
 
@@ -31,9 +47,7 @@ if __name__ == '__main__':
         X_imp = imp.run(X)
         res[m] = X_imp
 
-    # dfX = pd.DataFrame(X)
-    # nul_data = pd.isnull(dfX)
-    # dfX = dfX.assign(FillMean=dfX.fillna(dfX.mean()))
+    exit()
 
     fig = plt.figure(figsize=(13, 6))
     ax = fig.add_subplot(111)
@@ -46,7 +60,6 @@ if __name__ == '__main__':
     # Third step
     # Optimize and train the neural networks on the imputed and original data
     # Collect all the errors for comparing
-    print("Running XGBoost regression on imputing data!")
     sequence_len = 4
     prediction = {}
     error = {}
@@ -57,6 +70,7 @@ if __name__ == '__main__':
         x = scaler.fit_transform(x.reshape(-1, 1))[:, 0]
         params = optimizeXGBoost(x, sequence_len=sequence_len)
         yhat, err = XGBoostPredict(x, params, sequence_len=sequence_len)
+        exit()
         prediction[key] = yhat
         error[key] = err
     plt.show()
