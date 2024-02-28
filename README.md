@@ -1,14 +1,13 @@
 # timeseries_imputlorer
 
-This repository contains scripts that implement univariate time series imputation
-methods. The user has the ability of testing the methods and evaluating them
-using statistical tools and standard metrics such as mean absolute error. 
-In addition, the user can test any provided imputation method using XGBoost
-regression.
+This repository contains scripts that implement univariate time series
+imputation methods. The user can test the methods and evaluate them using
+statistical tools and standard metrics such as mean absolute error. In addition,
+the user can try any provided imputation method using XGBoost regression.
 
-> The main goal of the *timeseries_imputlorer* is to provide tools and means to evaluate different imputation methods on any kind of univariate time series data set.
+> The main goal of the *timeseries_imputlorer* is to provide tools and means to evaluate different imputation methods on any univariate time series data set.
 
-The main class named `TSImputer` compiles five major imputation methods:
+The main class named `TSImputer` compiles five basic imputation methods:
   1. Next Observation Carried Backward (NOCB), which is similar to `bfill()`
   of Pandas,
   2. Last Observation Carried Forward (LOCF), which is similar to `ffill()` of
@@ -17,8 +16,7 @@ The main class named `TSImputer` compiles five major imputation methods:
   4. IterativeImputer of Sklearn,
   5. KNNImputer of Sklearn.
 
-The dataloader that is being used in training and testing the XGBoost regressor
-can be found [here](https://github.com/gdetor/pytorch_timeseries_loader).
+> Some of the scripts in this repository use the dataloader provided by the repository **[pytorch_timeseries_dataloader](https://github.com/gdetor/pytorch_timeseries_loader)**. The XGBoost trainer uses the dataloader to split the training/test data set.
 
 
 ## Contents
@@ -50,22 +48,30 @@ imeseries_imputlorer/
     └── test_imputer.py
 
 ```
-The core implementation lies in the directory **imputlorer**. There the user can find the following files:
+The core implementation lies in the directory **imputlorer**. There, the user can find the following files:
   - **imputer** This file contains the class `TSImputer`, which implements the imputation methods.
   - **nocb_locf_imputer.py** This is the implementation of the *NOCB* and *LOCF* methods.
-  - **generate_data.py** In this script there are two functions that generate white noise and sinusoidal synthetic data for testing purposes. The user can ignore these functions and use their own.
+  - **generate_data.py** In this script, the user will find two functions that generate white noise and sinusoidal synthetic data for testing purposes. The user can ignore these functions and use their own.
   - **compare_imputation_methods.py** This file contains a function that estimates and reports the summary statistics of the data (pre- and post-imputation), and a function that compares imputation methods and reports the error metrics.
-  - **xgb_regressor.py** In this file there are all the functions so that the user can optimize the hyperparameters of an XGBoost regressor and then test imputation methods using the quiality (error) of the predictions of the regressor as a measure of evaluation.
-  - The directory **pytorch_timeseries_loader** is the dataloader used to split the training/test data set for the XGBoost regressor. 
+  - **xgb_regressor.py** In this file, there are all the functions so that the user can optimize the hyperparameters of an XGBoost regressor and then test imputation methods using the quality (error) of the predictions of the regressor as a measure of evaluation.
+  - The directory **pytorch_timeseries_loader** is the data loader to split the training/test data set for the XGBoost regressor. 
 
-In the directory **tests** there are tests for both the class `TSImputer` and the evaluation tools. Finally, the folder **demo** contains three examples showing how to perform a data imputation, compare and evaluate imputation methods, and how to use XGBoost regression to evaluate different imputation methods.
+The directory **tests** includes tests for the class `TSImputer` and the evaluation tools. Finally, the folder **demo** contains three examples showing how to perform a data imputation, compare and evaluate imputation methods, and use XGBoost regression to evaluate different imputation methods.
+
+
+## Install
 
 ## Example usage
 
+Remember that the user can use their data in all the examples below. The only constraint is that the data must be stored in Numpy arrays of shape (n_samples, 1) (since we treat univariate time series and thus there is only one feature). Moreover, the following code snippets are available as standalone Python scripts under the folder `data/`.
+
 ### Time series imputation
 
+The primary function of **Imputlorer** is to apply different imputation methods on univariate time series data and evaluate and compare them. Thus, the first example shows how to perform data imputation on synthetic data and, more precisely, sinusoidal data with normal noise. The code snippet below demonstrates the three main steps the user has to take to do the imputation and obtain visual results for further inspection. Finally, the code shows how to print out the summary statistics of the data after imputation to compare the effect of different 
+imputation techniques have on the data.
+
 ```python
-   # First step
+    # First step
     # Load or generate the data
     X, X0 = lore.generate_data.generateSinusoidalData(size=1000,
                                                       missing_perc=0.2)
@@ -76,6 +82,7 @@ In the directory **tests** there are tests for both the class `TSImputer` and th
     method = ["simple", "multi"]
     strategy = ["mean", "median", "constant"]
 
+	# Store the name of the method and the results in the dictionary res
     res = {}
     for i, m in enumerate(method):
         for j, s in enumerate(strategy):
@@ -104,8 +111,10 @@ In the directory **tests** there are tests for both the class `TSImputer` and th
 
 ### Compare and evaluate imputation methods
 
+The second example demonstrates how the user can compare several imputation methods. Again, the code snippet below shows the two steps the user must take to compare the methods. The function `compareImputationMethods` will return a  Python dictionary containing the name of each tested method and its corresponding errors.
+
 ```python
-  # First step
+  	# First step
     # Load or generate the data
     X, X0 = lore.generate_data.generateSinusoidalData(size=100,
                                                       missing_perc=0.2)
@@ -131,6 +140,9 @@ In the directory **tests** there are tests for both the class `TSImputer` and th
 
 
 ### Use XGBoost regression to evaluate different imputation methods
+
+The third and last example shows how to use XGBoost regression to evaluate the performance of different imputation methods, and thus, the user can decide which is suitable for their data.
+In the current code snippet, all the available imputation techniques are tested. First, the raw data (with NaN values) are imputed, and then the same data is used to train XGBoost regressors. The XGBoost regressor's hyperparameters are tuned for each method using Ray Tune. Then, the optimal hyperparameters pass to the XGBoost trainer, which, after convergence, will provide all the test predictions and the corresponding errors. Hence, the user can decide which method achieved the best results in the regression and thus keep that method.
 
 ```python
     # First step
