@@ -48,6 +48,7 @@ if __name__ == '__main__':
         X_imp = imp.run(X)
         res[m] = X_imp
 
+    # Plot all the results for visual inspection
     fig = plt.figure(figsize=(13, 6))
     ax = fig.add_subplot(111)
     ax.plot(X0, '-', c='k', label='original')

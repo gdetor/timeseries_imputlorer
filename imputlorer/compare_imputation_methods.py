@@ -225,4 +225,4 @@ def compareImputationMethods(X,
             print(f"R2: {r2}")
             print("++++++++++++++++++++++++++++++++++++++++++++++++++++")
 
-        return errors
+    return errors

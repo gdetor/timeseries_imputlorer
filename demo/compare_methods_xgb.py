@@ -58,13 +58,20 @@ if __name__ == '__main__':
     for key, item in res.items():
         print(f"============ Now running {key} =============")
         x = item
+        # Normalize the data
         scaler = MinMaxScaler()
         x = scaler.fit_transform(x.reshape(-1, 1))[:, 0]
+
+        # Tune the XGBoost hyperparameters using Ray
         params = lore.xgb_regressor.optimizeXGBoost(x,
                                                     sequence_len=sequence_len)
-        yhat, err = lore.xgb_regressor.XGBoostPredict(x,
-                                                      params,
-                                                      sequence_len=sequence_len)
+
+        # Make some test predictions and collect the error
+        yhat, err = lore.xgb_regressor.XGBoostPredict(
+                x,
+                params,
+                sequence_len=sequence_len)
+        # Store the predictions and the errors for later use
         prediction[key] = yhat
         error[key] = err
 

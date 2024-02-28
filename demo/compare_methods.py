@@ -35,9 +35,14 @@ if __name__ == '__main__':
     method = ["simple", "multi"]
     strategy = ["mean", "median", "constant"]
 
-    lore.compare_imputation_methods.compareImputationMethods(X0,
-                                                             method=method,
-                                                             standalone_method=standalone_method,
-                                                             strategy=strategy,
-                                                             missing_vals_perc=0.2,
-                                                             print_on=True)
+    err = lore.compare_imputation_methods.compareImputationMethods(
+            X0,
+            method=method,
+            standalone_method=standalone_method,
+            strategy=strategy,
+            missing_vals_perc=0.2,
+            print_on=True)
+
+    # The dictionary err contains the errors: Raw bias, percent bias, MAE,
+    # RMSE, and R2
+    # print(err)
