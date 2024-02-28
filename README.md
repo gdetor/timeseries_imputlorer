@@ -4,7 +4,9 @@ This repository contains scripts that implement univariate time series imputatio
 methods. The user has the ability of testing the methods and evaluating them
 using statistical tools and standard metrics such as mean absolute error. 
 In addition, the user can test any provided imputation method using XGBoost
-regression. 
+regression.
+
+> The main goal of the *timeseries_imputlorer* is to provide tools and means to evaluate different imputation methods on any kind of univariate time series data set.
 
 The main class named `TSImputer` compiles five major imputation methods:
   1. Next Observation Carried Backward (NOCB), which is similar to `bfill()`
@@ -38,25 +40,35 @@ imeseries_imputlorer/
 │   ├── imputer.py
 │   ├── __init__.py
 │   ├── nocb_locf_imputer.py
-│   ├── pytorch_timeseries_loader
-│   │   ├── example.py
-│   │   ├── LICENSE
-│   │   ├── README.md
-│   │   ├── timeseries_loader.py
-│   │   └── transforms.py
+│   ├── pytorch_timeseries_loader/
 │   └── xgb_regressor.py
 ├── LICENSE
 ├── main.py
 ├── README.md
 └── test
     ├── test_comparisons.py
-        └── test_imputer.py
+    └── test_imputer.py
 
 ```
+The core implementation lies in the directory **imputlorer**. There the user can find the following files:
+  - **imputer** This file contains the class `TSImputer`, which implements the imputation methods.
+  - **nocb_locf_imputer.py** This is the implementation of the *NOCB* and *LOCF* methods.
+  - **generate_data.py** In this script there are two functions that generate white noise and sinusoidal synthetic data for testing purposes. The user can ignore these functions and use their own.
+  - **compare_imputation_methods.py** This file contains a function that estimates and reports the summary statistics of the data (pre- and post-imputation), and a function that compares imputation methods and reports the error metrics.
+  - **xgb_regressor.py** In this file there are all the functions so that the user can optimize the hyperparameters of an XGBoost regressor and then test imputation methods using the quiality (error) of the predictions of the regressor as a measure of evaluation.
+  - The directory **pytorch_timeseries_loader** is the dataloader used to split the training/test data set for the XGBoost regressor. 
 
-
+In the directory **tests** there are tests for both the class `TSImputer` and the evaluation tools. Finally, the folder **demo** contains three examples showing how to perform a data imputation, compare and evaluate imputation methods, and how to use XGBoost regression to evaluate different imputation methods.
 
 ## Example usage
+
+### Time series imputation
+
+
+### Compare and evaluate imputation methods
+
+
+### Use XGBoost regression to evaluate different imputation methods
 
 
 ## Dependencies
@@ -72,5 +84,6 @@ imeseries_imputlorer/
 
 The software available in this repository has been tested in the following platforms:
   - Ununtu 22.04.4 LTS
-  - Python 3.10.12
-  - GCC 11.4.0
+      - Python 3.10.12
+      - GCC 11.4.0
+      - x86_64
