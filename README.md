@@ -1,4 +1,4 @@
-# timeseries_imputlorer
+# Timeseries Imputlorer
 
 This repository contains scripts that implement univariate time series
 imputation methods. The user can test the methods and evaluate them using
@@ -60,6 +60,21 @@ The directory **tests** includes tests for the class `TSImputer` and the evaluat
 
 
 ## Install
+
+To be able to use all the classes, methods, and functions provided in this repository, the user first has to clone the present repository
+recursively so they can also get the **pytorch_timeseries_loader** submodule.
+
+```bash
+$ git clone https://github.com/gdetor/timeseries_imputlorer --recursive
+```
+Once, they have cloned the repository, they can install all the dependencies by
+typing and running the following commands in a terminal
+
+```bash
+$ cd timeseries_imputlorer
+$ pip (or pip3) install -Ur requirements.txt
+```
+
 
 ## Example usage
 
@@ -207,7 +222,7 @@ In the current code snippet, all the available imputation techniques are tested.
 
 ## Tested platforms
 
-The software available in this repository has been tested in the following platforms:
+The software available in this repository has been tested on the following platforms:
   - Ununtu 22.04.4 LTS
       - Python 3.10.12
       - GCC 11.4.0
