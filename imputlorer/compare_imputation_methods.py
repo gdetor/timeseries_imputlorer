@@ -30,6 +30,17 @@ def summaryStatistics(X, report=False):
 
     @param X An ndarray of shape (n_samples, 1).
 
+    @note This function estimates the kurtosis and the skewness of the input
+    data sample. When the kurtosis is < 0, the distribution is playkurtic;
+    if kurtosis is > 0, then the distribution is leptokurtic (more outliers
+    than the normal distribution), and finally, when it is = 0, the sample is
+    normally distributed. If we don't use the Fisher definition, the zero is
+    replaced by three (3). By default, the Scipy implementation we use here
+    uses the Fisher definition. When the skewness is zero, the left and right
+    tails of the distribution are balanced; if skewness > 0, then the right
+    tail is longer, and on the other hand, if skewness < 0, the left tail is
+    more extended.
+
     @return A Python dictionary that contains the summary statistics.
     """
     X_ = X[~np.isnan(X)]
